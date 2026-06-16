@@ -10,12 +10,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.FoodManagementApp.model.User;
+import com.example.FoodManagementApp.repository.UserRepository;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class SecuriutyController {
 //	@Autowired
 //	private InMemoryUserDetailsManager inMemoryUserDetailsManager;
+	
+	@Autowired
+	private UserRepository repository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -40,13 +46,19 @@ public class SecuriutyController {
 	 */
 	@RequestMapping("/login")
 	public ModelAndView login(ModelAndView mav, @RequestParam(value="error", required=false) String error, HttpServletRequest request) {
-		// すでにログイン中→foodsへリダイレクト
+		// すでにログイン中の処理
 		if (request.getRemoteUser() != null) {
+			// 管理者の遷移先
+			if(request.isUserInRole("ADMIN")) {
+				mav.setViewName("redirect:/users");
+				return mav;
+			}
+			// 一般ユーザーの遷移先
 			mav.setViewName("redirect:/foods");
 			return mav;
 		}
 		
-		// 初期アクセス/未ログイン→ログインページへ
+		// 初期アクセス/未ログイン→ログインページへの処理
 		mav.setViewName("login");
 		mav.addObject("title", "食品管理システム");
 		if(error != null) {
@@ -60,9 +72,30 @@ public class SecuriutyController {
 	
 	@PostMapping("/register")
 	public ModelAndView register(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request, ModelAndView mav) {
-		// 登録処理
-		// 未作成
-		return null;
+		// パスワード暗号化
+		String pass = passwordEncoder.encode(password);
+		
+		// ***** 作成する前に重複チェックと空欄チェックを行うようにする *****
+		
+		// 空欄の場合はそのままログイン画面にリダイレクト
+		if (username.isBlank() || password.isBlank()) {
+			mav.setViewName("redirect:/login");
+		}
+		// 記入したら重複チェックに入る
+		else {
+			// チェック処理
+			
+			// ユーザー作成
+			User newUser = new User(username, pass, "ROLE_USER");
+			repository.save(newUser);
+			
+			// 暫定遷移先
+			mav.setViewName("login");
+			mav.addObject("title", "食品管理システム");
+			mav.addObject("msg", "登録できました。ログインしてください");
+		}
+		// 遷移先を返す
+		return mav;
 	}
 	
 	/**

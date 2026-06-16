@@ -40,10 +40,11 @@ public class SecurityConfig {
 				.requestMatchers("/users").hasRole("ADMIN")						// 管理者のみアクセス可能パス
 				.anyRequest().authenticated()
 			)
+			// ログイン
 			.formLogin((form) -> form
 				.loginProcessingUrl("/login")									// ログイン処理のURLパス
 				.loginPage("/login")											// ログインページのURLパス
-				.defaultSuccessUrl("/foods")									// デフォルトは食品一覧
+				.defaultSuccessUrl("/login")									// デフォルト遷移先
 				.permitAll()
 			)
 			// ログアウト
