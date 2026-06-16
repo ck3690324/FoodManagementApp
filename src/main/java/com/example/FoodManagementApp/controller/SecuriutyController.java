@@ -38,8 +38,7 @@ public class SecuriutyController {
 	
 	/**
 	 * ログイン処理、ログインページの表示(未ログイン)
-	 * すでにログイン中の場合は遷移する(/foods)
-	 * ***********管理者の/usersへの遷移は未実装***********
+	 * すでにログイン中の場合は遷移する(/foods、/users)
 	 * @param mav
 	 * @param error エラー
 	 * @return ビュー
@@ -75,15 +74,13 @@ public class SecuriutyController {
 		// パスワード暗号化
 		String pass = passwordEncoder.encode(password);
 		
-		// ***** 作成する前に重複チェックと空欄チェックを行うようにする *****
-		
 		// 空欄の場合はそのままログイン画面にリダイレクト
 		if (username.isBlank() || password.isBlank()) {
 			mav.setViewName("redirect:/login");
 		}
 		// 記入したら重複チェックに入る
 		else {
-			// チェック処理
+			// ***** チェック処理 *****
 			
 			// ユーザー作成
 			User newUser = new User(username, pass, "ROLE_USER");
@@ -106,7 +103,6 @@ public class SecuriutyController {
 	 */
 	@GetMapping("/foods")
 	public ModelAndView foods(ModelAndView mav, HttpServletRequest request) {
-//		String user = request.getRemoteUser();
 		mav.setViewName("foods");
 		mav.addObject("title", "食品管理システム | 食品一覧");
 		mav.addObject("title2", "食品一覧");
@@ -124,7 +120,6 @@ public class SecuriutyController {
 	@GetMapping("/users")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ModelAndView users(ModelAndView mav, HttpServletRequest request) {
-//		String user = request.getRemoteUser();
 		mav.setViewName("users");
 		mav.addObject("title", "食品管理システム | ユーザー一覧");
 		mav.addObject("title2", "ユーザー一覧");
