@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Add Page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+
+<body class="container">
+	<style>
+.err {
+	color: red
+}
+</style>
+	<h1 class="display-4 mb-4" th:text="${title}"></h1>
+	<p th:text="${msg}"></p>
+
+	<form method="post" action="/foods/update" th:object="${formModel}">
+
+		<div class="mb-3" th:each="fieldName, stat : ${fieldNames}">
+
+			<label th:for="${fieldName}" class="form-label"
+				th:text="${fieldJapaneseNames.get(stat.index)}"></label>
+
+			<div th:switch="${fieldName}">
+
+				<textarea th:case="'memo'" class="form-control"
+					th:name="${fieldName}" th:text="*{__${fieldName}__}"
+					th:errorclass="err"></textarea>
+
+				<input th:case="'expirationDate'" type="datetime-local"
+					class="form-control" th:name="${fieldName}"
+					th:value="*{__${fieldName}__}" th:errorclass="err" /> <input
+					th:case="'purchaseDate'" type="datetime-local" class="form-control"
+					th:name="${fieldName}" th:value="*{__${fieldName}__}"
+					th:errorclass="err" /> <input th:case="*" type="text"
+					class="form-control" th:name="${fieldName}"
+					th:value="*{__${fieldName}__}" th:errorclass="err" />
+
+			</div>
+			<div th:if="${#fields.hasErrors('__${fieldName}__')}"
+				th:errors="*{__${fieldName}__}" th:errorclass="err"></div>
+		</div>
+		<div class="d-flex gap-2">
+			<input type="submit" class="btn btn-primary" value="Update" />
+			 <a
+				th:href="@{/foods}" class="btn btn-secondary">Cancel</a>
+		</div>
+	</form>
+
+
+
+
+</body>
+
+
+</html>
