@@ -1,7 +1,6 @@
 package com.example.FoodManagementApp.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -111,20 +110,4 @@ public class SecuriutyController {
 		return mav;
 	}
 	
-	/**
-	 * ユーザー一覧ページ(管理者のみアクセス可能)
-	 * @param mav
-	 * @param request
-	 * @return
-	 */
-	@GetMapping("/users")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ModelAndView users(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("users");
-		mav.addObject("title", "食品管理システム | ユーザー一覧");
-		mav.addObject("title2", "ユーザー一覧");
-		mav.addObject("msg", "ユーザー管理ページ");
-		
-		return mav;
-	}
 }
