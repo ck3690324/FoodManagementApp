@@ -1,4 +1,4 @@
-package com.example.FoodManagementApp;
+package com.example.FoodManagementApp.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import jakarta.annotation.PostConstruct;
+import com.example.FoodManagementApp.model.User;
+import com.example.FoodManagementApp.service.UserService;
+
 import jakarta.transaction.Transactional;
 
 @Controller
@@ -19,12 +21,12 @@ public class UserController {
 	@Autowired
 	UserService service;
 
-//ユーザー一覧表示
+	//ユーザー一覧表示
 	@RequestMapping("/users")
 	public ModelAndView index(ModelAndView mav) {
 
 		mav.setViewName("users");
-		 mav.addObject("isSearch", false);
+		mav.addObject("isSearch", false);
 		mav.addObject("title", "ユーザー管理");
 
 		mav.addObject("data", service.getAllUsers());
@@ -33,21 +35,21 @@ public class UserController {
 	}
 
 	// ダミーデータ生成
-	@PostConstruct
-	public void init() {
+//	@PostConstruct
+//	public void init() {
+//
+//		User user1 = new User();
+//		user1.setUserId("user1");
+//		user1.setPassword("888");
+//		service.register(user1);
+//
+//		User user2 = new User();
+//		user2.setUserId("user2");
+//		user2.setPassword("777");
+//		service.register(user2);
+//	}
 
-		User user1 = new User();
-		user1.setUserId("user1");
-		user1.setPassword("888");
-		service.register(user1);
-
-		User user2 = new User();
-		user2.setUserId("user2");
-		user2.setPassword("777");
-		service.register(user2);
-	}
-
-   //ユーザー削除確認画面
+	// ユーザー削除確認画面
 	@RequestMapping(value = "/users/delete/{id}", method = RequestMethod.GET)
 	public ModelAndView delete(@PathVariable Integer id, ModelAndView mav) {
 		mav.setViewName("u_delete");
@@ -72,14 +74,11 @@ public class UserController {
 		mav.setViewName("users");
 		List<User> list = service.searchUser(keyword);
 		mav.addObject("data", list);
-		 mav.addObject("isSearch", true);
-		 
+		mav.addObject("isSearch", true);
+
 		if (list.isEmpty()) {
 			mav.addObject("msg", "該当するユーザーがいません。");
 		}
 		return mav;
 	}
-	
-
-
 }

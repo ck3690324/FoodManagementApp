@@ -17,13 +17,13 @@ public class User {
 	@NotNull
 	private long id;
 	
-	@Column(nullable = false)
+	@Column(name = "user_id", nullable = false)
 	private String userId;
 	
-	@Column(nullable = false)
+	@Column(name = "password", nullable = false)
 	private String password;
 	
-	@Column(nullable = false)
+	@Column(name = "authority", nullable = false)
 	private String authority;
 	
 	// コンストラクタ
