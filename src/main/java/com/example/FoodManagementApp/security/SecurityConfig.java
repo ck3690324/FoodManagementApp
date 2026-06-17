@@ -3,7 +3,6 @@ package com.example.FoodManagementApp.security;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -51,6 +50,9 @@ public class SecurityConfig {
 			// ログアウト
 			.logout((logout) -> logout
 				.logoutSuccessUrl("/login").permitAll()							// ログアウト後の遷移先
+			)
+			.exceptionHandling((exception) -> exception							// アクセス権ない場合
+				.accessDeniedPage("/")											// リダイレクト
 			);
 		
 		return http.build();
@@ -91,28 +93,28 @@ public class SecurityConfig {
 //	 * @param passwordEncoder
 //	 * @return
 //	 */
-	@Bean
-	public CommandLineRunner initDummyAccounts(PasswordEncoder passwordEncoder) {
-		return args -> {
-			String countSql = "SELECT COUNT(*) FROM users";
-			Integer userCount = jdbcTemplate.queryForObject(countSql, Integer.class);
-			
-			if (userCount != null && userCount == 0) {
-				String insertSql = "INSERT INTO users (id, user_id, password, authority) VALUES (?, ?, ?, ?)";
-				
-				String adminPass = passwordEncoder.encode("pass");
-				jdbcTemplate.update(insertSql, 1, "admin", adminPass, "ROLE_ADMIN");
-				
-				String userPass = passwordEncoder.encode("pass");
-				jdbcTemplate.update(insertSql, 2, "user", userPass, "ROLE_USER");
-				
-				System.out.println("アカウント（admin, user）を作成しました。");
-			}
-			else {
-				System.out.println("アカウント作成しませんでした");
-			}
-		};
-	}
+//	@Bean
+//	public CommandLineRunner initDummyAccounts(PasswordEncoder passwordEncoder) {
+//		return args -> {
+//			String countSql = "SELECT COUNT(*) FROM users";
+//			Integer userCount = jdbcTemplate.queryForObject(countSql, Integer.class);
+//			
+//			if (userCount != null && userCount == 0) {
+//				String insertSql = "INSERT INTO users (id, user_id, password, authority) VALUES (?, ?, ?, ?)";
+//				
+//				String adminPass = passwordEncoder.encode("pass");
+//				jdbcTemplate.update(insertSql, 1, "admin", adminPass, "ROLE_ADMIN");
+//				
+//				String userPass = passwordEncoder.encode("pass");
+//				jdbcTemplate.update(insertSql, 2, "user", userPass, "ROLE_USER");
+//				
+//				System.out.println("アカウント（admin, user）を作成しました。");
+//			}
+//			else {
+//				System.out.println("アカウント作成しませんでした");
+//			}
+//		};
+//	}
 	
 //	/**
 //	 * ダミーアカウント作成(メモリ)
