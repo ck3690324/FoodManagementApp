@@ -60,6 +60,7 @@ public class SecuriutyController {
 		// 初期アクセス/未ログイン→ログインページへの処理
 		mav.setViewName("login");
 		mav.addObject("title", "食品管理システム");
+		mav.addObject("test", true);
 		if(error != null) {
 			mav.addObject("msg", "ログインできませんでした。");
 		}
@@ -89,7 +90,6 @@ public class SecuriutyController {
 		}
 		// 記入したら重複チェックに入る
 		else {
-//			System.out.println(repository.findByUserId(username));
 			// 弾かれる場合(findByUserIdがemptyの場合)
 			if (!repository.findByUserId(username).isEmpty()) {
 				mav.setViewName("login");
@@ -101,11 +101,21 @@ public class SecuriutyController {
 				// ユーザー作成
 				User newUser = new User(username, pass, "ROLE_USER");
 				repository.save(newUser);
-				
-				// 暫定遷移先
-				mav.setViewName("login");
-				mav.addObject("title", "食品管理システム");
-				mav.addObject("msg", "登録できました。ログインしてください");
+								
+				// ログインを試す
+				try {
+					request.login(username, password);
+					
+					// リダイレクト
+					mav.setViewName("redirect:/");
+				}
+				// ログイン失敗
+				catch(Exception e) {
+					e.printStackTrace();
+					
+					mav.addObject("msg", "手動でログインしてください");
+					mav.setViewName("redirect:/login");
+				}
 			}
 		}
 		// 遷移先を返す
