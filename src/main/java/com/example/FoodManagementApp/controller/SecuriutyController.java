@@ -59,6 +59,7 @@ public class SecuriutyController {
 		// 初期アクセス/未ログイン→ログインページへの処理
 		mav.setViewName("login");
 		mav.addObject("title", "食品管理システム");
+		mav.addObject("test", true);
 		if(error != null) {
 			mav.addObject("msg", "ログインできませんでした。");
 		}
@@ -68,6 +69,15 @@ public class SecuriutyController {
 		return mav;
 	}
 	
+	/**
+	 * ユーザー登録
+	 * 登録時に空欄と重複ユーザーIDのチェックを行う
+	 * @param username 入力したユーザーid(ユーザー名)
+	 * @param password 入力したパスワード(送信時ハッシュ化)
+	 * @param request フォーム送信リクエスト
+	 * @param mav ビュー
+	 * @return 送信結果
+	 */
 	@PostMapping("/register")
 	public ModelAndView register(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletRequest request, ModelAndView mav) {
 		// パスワード暗号化
@@ -79,16 +89,33 @@ public class SecuriutyController {
 		}
 		// 記入したら重複チェックに入る
 		else {
-			// ***** チェック処理 *****
-			
-			// ユーザー作成
-			User newUser = new User(username, pass, "ROLE_USER");
-			repository.save(newUser);
-			
-			// 暫定遷移先
-			mav.setViewName("login");
-			mav.addObject("title", "食品管理システム");
-			mav.addObject("msg", "登録できました。ログインしてください");
+			// 弾かれる場合(findByUserIdがemptyの場合)
+			if (!repository.findByUserId(username).isEmpty()) {
+				mav.setViewName("login");
+				mav.addObject("title", "食品管理システム");
+				mav.addObject("msg", "IDが重複しています");
+			}
+			// 登録成功の場合
+			else {
+				// ユーザー作成
+				User newUser = new User(username, pass, "ROLE_USER");
+				repository.save(newUser);
+								
+				// ログインを試す
+				try {
+					request.login(username, password);
+					
+					// リダイレクト
+					mav.setViewName("redirect:/");
+				}
+				// ログイン失敗
+				catch(Exception e) {
+					e.printStackTrace();
+					
+					mav.addObject("msg", "手動でログインしてください");
+					mav.setViewName("redirect:/login");
+				}
+			}
 		}
 		// 遷移先を返す
 		return mav;
