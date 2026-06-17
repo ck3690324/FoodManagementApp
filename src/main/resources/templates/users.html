@@ -64,7 +64,7 @@
 
 		<tbody>
 
-			<tr th:each="user : ${data}">
+			<tr th:each="user : ${data}" th:if="${user.id != 1}">
 
 				<td th:text="${user.userId}">
 				</td>
