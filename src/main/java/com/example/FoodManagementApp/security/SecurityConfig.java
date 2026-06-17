@@ -50,6 +50,9 @@ public class SecurityConfig {
 			// ログアウト
 			.logout((logout) -> logout
 				.logoutSuccessUrl("/login").permitAll()							// ログアウト後の遷移先
+			)
+			.exceptionHandling((exception) -> exception							// アクセス権ない場合
+				.accessDeniedPage("/")											// リダイレクト
 			);
 		
 		return http.build();
