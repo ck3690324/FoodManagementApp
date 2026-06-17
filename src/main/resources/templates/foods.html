@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+	<head>
+		<title th:text="${title}"></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	</head>
+	<body class="container">
+		<h1 class="display-4 mb-4" th:text="${title2}"></h1>
+		<p th:text="${msg}"></p>
+
+		<!-- ROLE_ADMINのみ表示 -->
+		<div sec:authorize="hasRole('ADMIN')">
+			<a th:href="@{/users}">ユーザー管理</a>
+		</div>
+		
+		<!-- 共通パーツ -->
+		<div>
+			<a th:href="@{/logout}">ログアウト</a>
+		</div>
+	</body>
+</html>
