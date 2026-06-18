@@ -34,12 +34,12 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ModelAndView users(ModelAndView mav, HttpServletRequest request) {
 		mav.setViewName("users");
-//		mav.addObject("title", "食品管理システム | ユーザー一覧");
-//		mav.addObject("title2", "ユーザー一覧");
 		mav.addObject("title", "ユーザー管理ページ:");
 		mav.addObject("isSearch", false);
-//		mav.addObject("msg", "ユーザー管理ページ");
 		mav.addObject("data", service.getAllUsers());
+//		mav.addObject("title", "食品管理システム | ユーザー一覧");
+//		mav.addObject("title2", "ユーザー一覧");
+//		mav.addObject("msg", "ユーザー管理ページ");
 		
 		return mav;
 	}
@@ -63,7 +63,7 @@ public class UserController {
 	@RequestMapping(value = "/users/delete/{id}", method = RequestMethod.GET)
 	public ModelAndView delete(@PathVariable Integer id, ModelAndView mav) {
 		mav.setViewName("u_delete");
-		mav.addObject("title", "ユーザー削除画面：");
+		mav.addObject("title", "ユーザー削除画面：admin");
 		mav.addObject("msg", "このユーザーをリストから削除しますか？");
 		Optional<User> data = service.findById(id);
 		mav.addObject("formModel", data.get());
