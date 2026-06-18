@@ -8,9 +8,14 @@
 </head>
 <body class="container mt-4">
 	<div class="d-flex align-items-center mb-4">
-		<h1 class="display-5" th:text="${title}">
-			ユーザー管理
+		<h1 class="display-5">
+			
+			<span th:text="${!isSearch ? 'ユーザー管理：' : '検索結果：'}"></span>
+		<span sec:authentication="name"></span>
+		
 		</h1>
+		<a class="btn btn-outline-danger"
+		th:href="@{/logout}">ログアウト</a>
 		<a class="btn btn-success ms-auto"
 		   th:href="@{/foods}">
 			食品管理へ
