@@ -86,7 +86,6 @@ public class UserController {
 		if (keyword == null || keyword.trim().isEmpty()) {
 			mav.addObject("title", "ユーザー管理ページ:");
 			mav.addObject("msg", "検索キーワードを入力してください。");
-//			mav.addObject("data", service.getAllUsers());
 			mav.addObject("isSearch", true);
 			return mav;
 		}
