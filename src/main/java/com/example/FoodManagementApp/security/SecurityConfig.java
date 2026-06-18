@@ -90,12 +90,13 @@ public class SecurityConfig {
 //		
 //		return manager;
 //	}
-//	
-//	/**
-//	 * アカウント作成→mySQL
-//	 * @param passwordEncoder
-//	 * @return
-//	 */
+
+	
+	/**
+	 * アカウント作成→mySQL
+	 * @param passwordEncoder
+	 * @return
+	 */
 	@Bean
 	public CommandLineRunner initDummyAccounts(PasswordEncoder passwordEncoder) {
 		return args -> {

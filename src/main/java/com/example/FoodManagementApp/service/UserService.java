@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
 	// ユーザー登録
 	public User register(User user) {
 		user.setAuthority("ROLE_USER");
-		return repository.save(user);
+		return repository.saveAndFlush(user);
 	}
 	
 	// ユーザー削除
@@ -63,4 +63,7 @@ public class UserService implements UserDetailsService {
 				.authorities(new SimpleGrantedAuthority(user.getAuthority()))
 				.build();
 	}
+	
+
+	
 }
