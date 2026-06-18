@@ -22,7 +22,15 @@
 
 		<form method="post" action="/foods/update" th:object="${formModel}">
 
+
+			<div class="mb-3">
+				<label class="form-label">ID</label> <input type="text"
+					class="form-control" th:field="*{id}" readonly />
+			</div>
+
 			<div class="mb-3" th:each="fieldName, stat : ${fieldNames}">
+
+
 
 				<label th:for="${fieldName}" class="form-label"
 					th:text="${fieldJapaneseNames.get(stat.index)}"></label>
@@ -33,19 +41,22 @@
 						th:name="${fieldName}" th:text="*{__${fieldName}__}"
 						th:errorclass="err"></textarea>
 
+
+
 					<input th:case="'userID'" type="text" class="form-control"
-						th:name="${fieldName}" th:value="*{__${fieldName}__}" readonly /> <input
-						th:case="'remains'" type="text" class="form-control"
+						th:name="${fieldName}" th:value="*{__${fieldName}__}" readonly />
+					<input th:case="'remains'" type="text" class="form-control"
 						th:name="${fieldName}" th:value="*{__${fieldName}__}"
 						th:errorclass="err" /> <input th:case="'expirationDate'"
 						type="datetime-local" class="form-control" th:name="${fieldName}"
-						th:value="*{__${fieldName}__}" th:errorclass="err" th:readonly="${!isOwner}"/> <input
-						th:case="'purchaseDate'" type="datetime-local"
-						class="form-control" th:name="${fieldName} "
-						th:value="*{__${fieldName}__}" th:errorclass="err" th:readonly="${!isOwner}"/> <input
-						th:case="*" type="text" class="form-control"
-						th:name="${fieldName}" th:value="*{__${fieldName}__}"
-						th:errorclass="err" th:readonly="${!isOwner}"/>
+						th:value="*{__${fieldName}__}" th:errorclass="err"
+						th:readonly="${!isOwner}" /> <input th:case="'purchaseDate'"
+						type="datetime-local" class="form-control" th:name="${fieldName} "
+						th:value="*{__${fieldName}__}" th:errorclass="err"
+						th:readonly="${!isOwner}" /> <input th:case="*" type="text"
+						class="form-control" th:name="${fieldName}"
+						th:value="*{__${fieldName}__}" th:errorclass="err"
+						th:readonly="${!isOwner}" />
 
 				</div>
 				<div th:if="${#fields.hasErrors('__${fieldName}__')}"
