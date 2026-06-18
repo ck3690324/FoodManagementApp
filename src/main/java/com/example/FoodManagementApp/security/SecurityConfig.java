@@ -3,13 +3,16 @@ package com.example.FoodManagementApp.security;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -67,12 +70,12 @@ public class SecurityConfig {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 	
-//	/**
-//	 * ログイン処理用
-//	 * serviceにあるものと同じ
-//	 * @param dataSource
-//	 * @return
-//	 */
+	/**
+	 * ログイン処理用
+	 * serviceにあるものと同じ
+	 * @param dataSource
+	 * @return
+	 */
 //	@Bean
 //	public UserDetailsService userDetailsService(DataSource dataSource) {
 //		JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
@@ -87,34 +90,34 @@ public class SecurityConfig {
 //		
 //		return manager;
 //	}
-	
+//	
 //	/**
 //	 * アカウント作成→mySQL
 //	 * @param passwordEncoder
 //	 * @return
 //	 */
-//	@Bean
-//	public CommandLineRunner initDummyAccounts(PasswordEncoder passwordEncoder) {
-//		return args -> {
-//			String countSql = "SELECT COUNT(*) FROM users";
-//			Integer userCount = jdbcTemplate.queryForObject(countSql, Integer.class);
-//			
-//			if (userCount != null && userCount == 0) {
-//				String insertSql = "INSERT INTO users (id, user_id, password, authority) VALUES (?, ?, ?, ?)";
-//				
-//				String adminPass = passwordEncoder.encode("pass");
-//				jdbcTemplate.update(insertSql, 1, "admin", adminPass, "ROLE_ADMIN");
-//				
-//				String userPass = passwordEncoder.encode("pass");
-//				jdbcTemplate.update(insertSql, 2, "user", userPass, "ROLE_USER");
-//				
-//				System.out.println("アカウント（admin, user）を作成しました。");
-//			}
-//			else {
-//				System.out.println("アカウント作成しませんでした");
-//			}
-//		};
-//	}
+	@Bean
+	public CommandLineRunner initDummyAccounts(PasswordEncoder passwordEncoder) {
+		return args -> {
+			String countSql = "SELECT COUNT(*) FROM users";
+			Integer userCount = jdbcTemplate.queryForObject(countSql, Integer.class);
+			
+			if (userCount != null && userCount == 0) {
+				String insertSql = "INSERT INTO users (id, user_id, password, authority) VALUES (?, ?, ?, ?)";
+				
+				String adminPass = passwordEncoder.encode("pass");
+				jdbcTemplate.update(insertSql, 1, "admin", adminPass, "ROLE_ADMIN");
+				
+				String userPass = passwordEncoder.encode("pass");
+				jdbcTemplate.update(insertSql, 2, "user", userPass, "ROLE_USER");
+				
+				System.out.println("アカウント（admin, user）を作成しました。");
+			}
+			else {
+				System.out.println("アカウント作成しませんでした");
+			}
+		};
+	}
 	
 //	/**
 //	 * ダミーアカウント作成(メモリ)

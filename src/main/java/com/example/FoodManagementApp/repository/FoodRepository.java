@@ -11,23 +11,22 @@ import org.springframework.stereotype.Repository;
 
 import com.example.FoodManagementApp.model.Food;
 
-
 @Repository
 public interface FoodRepository extends JpaRepository<Food, Long> {
 	public Optional<Food> findById(Long idNum);
-	
-	
-	@Query("SELECT f FROM Food f WHERE " +
-	           "f.foodName LIKE %:word% OR " +
-	           "f.category LIKE %:word% OR " +
-	           "f.memo LIKE %:word%")
+
+	@Query("SELECT f FROM Food f WHERE " + "f.foodName LIKE %:word% OR " + "f.category LIKE %:word% OR "
+			+ "f.memo LIKE %:word% OR " + "f.storingPlace LIKE %:word%"
+	)
 	List<Food> findByParam(@Param("word") String param);
-	
-	
 
 	@Query("SELECT f FROM Food f WHERE f.expirationDate > :fdate ORDER BY f.expirationDate ASC")
-	public List<Food> findSafeFoods(@Param("fdate") LocalDateTime date);
+	List<Food> findSafeFoods(@Param("fdate") LocalDateTime date);
 
 	@Query("SELECT f FROM Food f WHERE f.expirationDate <= :fdate ORDER BY f.expirationDate ASC")
-	public List<Food> findExpiredFoods(@Param("fdate") LocalDateTime date);
+	List<Food> findExpiredFoods(@Param("fdate") LocalDateTime date);
+	
+	List<Food> findByExpirationDateIsNull();
+	
+	
 }
