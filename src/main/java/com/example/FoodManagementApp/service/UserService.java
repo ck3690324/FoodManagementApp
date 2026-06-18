@@ -34,15 +34,12 @@ public class UserService implements UserDetailsService {
 		repository.deleteById(id);
 	}
 	
-	// ユーザー検索
-	public List<User> searchUser(String keyword) {
-		Optional<User> user = repository.findByUserIdContaining(keyword);
-		
-		if (user.isPresent()) {
-			return List.of(user.get());
+	
+	// ユーザー検索（あいまい検索に対応）
+		public List<User> searchUser(String keyword) {
+			// 新しく作った Containing（Listを返す方）を呼び出すように変更！
+			return repository.findByUserIdContaining(keyword);
 		}
-		return List.of();
-	}
 	
 	// ユーザーID(主キー)検索
 	public Optional<User> findById(int id){

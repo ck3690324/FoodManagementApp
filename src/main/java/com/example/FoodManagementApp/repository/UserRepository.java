@@ -1,5 +1,6 @@
 package com.example.FoodManagementApp.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
 	// 主キー検索
 	Optional<User> findById(int id);
 	// ユーザー名(userId)検索
-	Optional<User> findByUserIdContaining(String userId);
+	List<User> findByUserIdContaining(String userId);
 	Optional<User> findByUserId(String userId);
 	// ユーザー削除
 	User deleteById(int id);
