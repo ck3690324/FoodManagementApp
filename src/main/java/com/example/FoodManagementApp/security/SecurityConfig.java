@@ -9,8 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -68,12 +70,12 @@ public class SecurityConfig {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 	
-//	/**
-//	 * ログイン処理用
-//	 * serviceにあるものと同じ
-//	 * @param dataSource
-//	 * @return
-//	 */
+	/**
+	 * ログイン処理用
+	 * serviceにあるものと同じ
+	 * @param dataSource
+	 * @return
+	 */
 //	@Bean
 //	public UserDetailsService userDetailsService(DataSource dataSource) {
 //		JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
@@ -88,6 +90,7 @@ public class SecurityConfig {
 //		
 //		return manager;
 //	}
+
 	
 	/**
 	 * アカウント作成→mySQL

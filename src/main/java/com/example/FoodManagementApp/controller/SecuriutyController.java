@@ -127,14 +127,14 @@ public class SecuriutyController {
 	 * @param request
 	 * @return
 	 */
-	@GetMapping("/foods")
-	public ModelAndView foods(ModelAndView mav, HttpServletRequest request) {
-		mav.setViewName("foods");
-		mav.addObject("title", "食品管理システム | 食品一覧");
-		mav.addObject("title2", "食品一覧");
-		mav.addObject("msg", "食品一覧ページ");
-		
-		return mav;
-	}
+//	@GetMapping("/foods")
+//	public ModelAndView foods(ModelAndView mav, HttpServletRequest request) {
+//		mav.setViewName("foods");
+//		mav.addObject("title", "食品管理システム | 食品一覧");
+//		mav.addObject("title2", "食品一覧");
+//		mav.addObject("msg", "食品一覧ページ");
+//		
+//		return mav;
+//	}
 	
 }

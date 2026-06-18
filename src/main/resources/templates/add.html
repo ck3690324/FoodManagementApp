@@ -30,16 +30,15 @@
 					th:name="${fieldName}" th:text="*{__${fieldName}__}"
 					th:errorclass="err"></textarea>
 
-				<input th:case="'expirationDate'" type="datetime-local"
+				<input th:case="'userID'" type="text" class="form-control"
+					th:name="${fieldName}" th:value="${loginUserId}" readonly /> <input
+					th:case="'expirationDate'" type="datetime-local"
 					class="form-control" th:name="${fieldName}"
-					th:value="*{__${fieldName}__}" th:errorclass="err" /> 
-					
-				<input th:case="'purchaseDate'" type="datetime-local"
+					th:value="*{__${fieldName}__}" th:errorclass="err" /> <input
+					th:case="'purchaseDate'" type="datetime-local" class="form-control"
+					th:name="${fieldName}" th:value="*{__${fieldName}__}"
+					th:errorclass="err" /> <input th:case="*" type="text"
 					class="form-control" th:name="${fieldName}"
-					th:value="*{__${fieldName}__}" th:errorclass="err" /> 
-			
-				<input
-					th:case="*" type="text" class="form-control" th:name="${fieldName}"
 					th:value="*{__${fieldName}__}" th:errorclass="err" />
 
 			</div>
@@ -53,7 +52,7 @@
 		</div>
 	</form>
 
-	
+
 </body>
 
 

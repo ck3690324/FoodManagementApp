@@ -35,7 +35,7 @@ public class Food {
 	private String remains = "未開封"; // 初期値
 	
     //@ManyToOne //userIDを外部キーとする
-	@Column(name = "purchaser", comment = "購入者")
+	@Column(name = "purchaser", comment = "登録者")
 	private String userID;
     
     @Column(name="puchaseDate", comment="購入日")

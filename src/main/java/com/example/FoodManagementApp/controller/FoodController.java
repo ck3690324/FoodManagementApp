@@ -31,6 +31,8 @@ import jakarta.transaction.Transactional;
 @Controller
 public class FoodController {
 	
+	
+	
 	@Autowired
 	FoodRepository repository;
 	
@@ -39,9 +41,12 @@ public class FoodController {
 	
 	@RequestMapping("/foods")
 	public ModelAndView foods(@ModelAttribute("formModel") Food food, ModelAndView mav) {
+		String userId=foodService.getLoginUserId();
+		System.out.println(userId);
+		
 		mav.setViewName("view");
-		mav.addObject("title", "Food Page:userId");
-		mav.addObject("msg", "This is user page.");
+		mav.addObject("title", "Food Page");
+		//mav.addObject("msg", "This is user page.");
 		List<Food> list = repository.findAll();
 		
 		mav.addObject("formModel", food);
@@ -65,6 +70,7 @@ public class FoodController {
 		mav.addObject("title", "Add Page ");
 		mav.addObject("msg", "Food Add Page ");
 		mav.addObject("formModel", food);
+		mav.addObject("loginUserId", foodService.getLoginUserId());
 
 		mav.addObject("fieldNames", foodService.generateFieldNames());
 		mav.addObject("fieldJapaneseNames", foodService.generateJapaneseFieldNames());
@@ -101,6 +107,8 @@ public class FoodController {
 		mav.addObject("title", "edit Food.");
 		Optional<Food> data = repository.findById((long) id);
 		mav.addObject("formModel", data.get());
+		mav.addObject("loginUserId", foodService.getLoginUserId());
+		
 		mav.addObject("fieldNames", foodService.generateFieldNames());
 		mav.addObject("fieldJapaneseNames", foodService.generateJapaneseFieldNames());
 		return mav;
@@ -132,16 +140,41 @@ public class FoodController {
 
 	
 	@RequestMapping(value = "/foods/delete/{id}", method = RequestMethod.GET)
-	public ModelAndView showDeleteFood(@PathVariable int id, ModelAndView mav) {
+	public ModelAndView showDeleteFood(@PathVariable int id, HttpServletRequest request,ModelAndView mav) {
 		mav.setViewName("delete");
 		mav.addObject("title", "Delete Food.");
 		mav.addObject("msg", "Can I delete this record?");
 		Optional<Food> data = repository.findById((long) id);
-		mav.addObject("formModel", data.get());
+		
+		Food food = data.get();
+	    String loginUserId = foodService.getLoginUserId();
+	    
+	    // 👑 ① ADMIN権限を持っているかチェック
+	    boolean isAdmin = request.isUserInRole("ADMIN");
+	    // 👤 ② 自分自身の投稿ではない（他人の投稿である）かチェック
+	    boolean isNotOwner = !loginUserId.equals(food.getUserID());
+	    
+	    // 🚨 「他人」かつ「管理者でもない」場合のみエラーにする
+	    if (isNotOwner && !isAdmin) {
+	        // 🛑 【不一致エラー】削除ボタンを押させず、エラーメッセージだけを画面に表示する
+	        mav.setViewName("delete"); 
+	        mav.addObject("title", "Delete Error");
+	        mav.addObject("msg", "エラー：他のユーザーが登録した食品は削除できません。");
+	        mav.addObject("formModel", food); 
+	        mav.addObject("fieldNames", foodService.generateFieldNames());
+		    mav.addObject("fieldJapaneseNames", foodService.generateJapaneseFieldNames());
+	        return mav;
+	    }
+	    
+	    // ✅ 本人、または管理者の場合は通常通り削除確認画面を表示する
+	  
+		mav.addObject("formModel",food);
 		mav.addObject("fieldNames", foodService.generateFieldNames());
 		mav.addObject("fieldJapaneseNames", foodService.generateJapaneseFieldNames());
 		return mav;
 	}
+	
+	
 
 	@RequestMapping(value = "/foods/delete", method = RequestMethod.POST)
 	@Transactional
@@ -159,7 +192,7 @@ public class FoodController {
 	@RequestMapping(value = "/foods/search", method = RequestMethod.POST)
 	public ModelAndView searchFoods(HttpServletRequest request, ModelAndView mav) {
 		
-		mav.setViewName("view"); //処理後view画面に遷移」
+		mav.setViewName("view"); //処理後view画面に遷移
 		String param = request.getParameter("find_str");
 		String dateParam = request.getParameter("find_datetime");
 		mav.addObject("keywordValue", param);       // キーワード文字列
@@ -179,10 +212,6 @@ public class FoodController {
 			
 		}
 		
-		
-		
-		
-		
 		boolean hasWord = !param.isEmpty();
 		boolean hasDate = (formattedDate != null);
 		
@@ -191,7 +220,7 @@ public class FoodController {
 		if (hasWord && hasDate) {
 		    // 両方入力されている場合はキーワードで検索→　AND検索できるようにする 
 		    //data = foodService.findFoodsAdvanced(param, formattedDate);
-			data = foodService.findFoods(param); //1単語のみ対応
+			data = foodService.findFoods(param); //とりあえずキーワード検索のみ
 		    mav.addObject("data", data);
 		} else if (hasWord) {
 		    // キーワードのみ
@@ -206,20 +235,24 @@ public class FoodController {
 
 		    // 🔴 2. 期限切れのデータもデータベースから直接取得
 		    List<Food> expiredList = repository.findExpiredFoods(findDatetime);
+		    
+		    List<Food> noLimitList = repository.findByExpirationDateIsNull();
 
 		    // 3. それぞれ画面に送る
 		    mav.addObject("safeList", safeList);       // 🟢 期限内
 		    mav.addObject("expiredList", expiredList); // 🔴 期限切れ
+		    mav.addObject("noLimitList", noLimitList); // 🔴 期限なし
 		    
 		    
 		} else {
-		    mav = new ModelAndView("redirect:/foods");
+		    //mav = new ModelAndView("redirect:/foods");
+			return new ModelAndView("redirect:/foods"); //検索ボタン空うちの場合
 		}
 		
 
 		mav.addObject("title", "Find result");
-		mav.addObject("msg", "検索結果");
-		mav.addObject("value", param);
+		//mav.addObject("msg", "検索結果");
+		//mav.addObject("value", param);
 		
 		mav.addObject("fieldNames", foodService.generateFieldNames());
 		mav.addObject("fieldJapaneseNames", foodService.generateJapaneseFieldNames());

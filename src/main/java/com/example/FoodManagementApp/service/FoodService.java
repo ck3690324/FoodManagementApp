@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.FoodManagementApp.model.Food;
@@ -17,6 +18,12 @@ import jakarta.persistence.Column;
 
 @Service
 public class FoodService {
+	
+	public String getLoginUserId() {
+        return SecurityContextHolder.getContext()
+                                     .getAuthentication()
+                                     .getName();
+    }
 	
 	
 	
@@ -82,14 +89,17 @@ public class FoodService {
 		
 		try {
 			fid = Long.parseLong(param);
-			Optional<Food> result=foodRepository.findById(fid);
-			results.add(result.get());
+			Optional<Food> result=foodRepository.findById(fid); //ほかの列の数字は部分一致で検索できない
+			if (result.isPresent()) {
+			    results.add(result.get());
+			}
+			
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 			
 		}
 		
-		if (results.isEmpty()) {
+		if (results.isEmpty()) {//もしidでヒットしなかったらほかの列でキーワード検索
 			results=foodRepository.findByParam(param);
             return results;
         }
