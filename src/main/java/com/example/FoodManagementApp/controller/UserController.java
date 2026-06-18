@@ -82,6 +82,15 @@ public class UserController {
 	@RequestMapping(value = "/users/search", method = RequestMethod.GET)
 	public ModelAndView search(@RequestParam String keyword, ModelAndView mav) {
 		mav.setViewName("users");
+		
+		if (keyword == null || keyword.trim().isEmpty()) {
+			mav.addObject("title", "ユーザー管理ページ:");
+			mav.addObject("msg", "検索キーワードを入力してください。");
+//			mav.addObject("data", service.getAllUsers());
+			mav.addObject("isSearch", true);
+			return mav;
+		}
+		
 		List<User> list = service.searchUser(keyword);
 		mav.addObject("title", "検索結果：");
 		mav.addObject("data", list);
