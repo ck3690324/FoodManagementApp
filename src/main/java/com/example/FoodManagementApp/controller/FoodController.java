@@ -245,7 +245,8 @@ public class FoodController {
 		    
 		    
 		} else {
-		    mav = new ModelAndView("redirect:/foods");
+		    //mav = new ModelAndView("redirect:/foods");
+			return new ModelAndView("redirect:/foods"); //検索ボタン空うちの場合
 		}
 		
 

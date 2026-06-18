@@ -15,9 +15,13 @@ import com.example.FoodManagementApp.model.Food;
 public interface FoodRepository extends JpaRepository<Food, Long> {
 	public Optional<Food> findById(Long idNum);
 
-	@Query("SELECT f FROM Food f WHERE " + "f.foodName LIKE %:word% OR " + "f.category LIKE %:word% OR "
-			+ "f.memo LIKE %:word% OR " + "f.storingPlace LIKE %:word%"
-	)
+	@Query("SELECT f FROM Food f WHERE " 
+		     + "f.foodName LIKE %:word% OR " 
+		     + "f.category LIKE %:word% OR "
+		     + "f.memo LIKE %:word% OR " 
+		     + "f.userID LIKE %:word% OR "
+		     + "f.storingPlace LIKE %:word%"
+		)
 	List<Food> findByParam(@Param("word") String param);
 
 	@Query("SELECT f FROM Food f WHERE f.expirationDate > :fdate ORDER BY f.expirationDate ASC")
