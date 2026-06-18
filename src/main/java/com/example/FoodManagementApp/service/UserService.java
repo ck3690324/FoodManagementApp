@@ -36,7 +36,7 @@ public class UserService implements UserDetailsService {
 	
 	// ユーザー検索
 	public List<User> searchUser(String keyword) {
-		Optional<User> user = repository.findByUserId(keyword);
+		Optional<User> user = repository.findByUserIdContaining(keyword);
 		
 		if (user.isPresent()) {
 			return List.of(user.get());
